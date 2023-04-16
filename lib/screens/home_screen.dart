@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../inner_screens/add_sche.dart';
 import '../inner_screens/sche_tile.dart';
 import '../models/schedule_model.dart';
 import '../providers/schedule_provider.dart';
@@ -61,6 +62,18 @@ class _HomeScreenState extends State<HomeScreen> {
                       });
                 },
               ),
+            ),
+            floatingActionButton: FloatingActionButton(
+              backgroundColor: Colors.green,
+              child: const Icon(
+                Icons.add,
+              ),
+              onPressed: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => AddSche()),
+                );
+              },
             ),
           );
   }

@@ -36,6 +36,14 @@ dependencies:
   cupertino_icons: ^1.0.2
   provider: ^6.0.1
   http: ^0.13.4
+  table_calendar: 3.0.7
+  intl: 0.17.0
+  drift: 2.1.0
+  sqlite3_flutter_libs: 0.5.10
+  path_provider: 2.0.11
+  get_it: 7.2.0
+  dio: 4.0.6
+  uuid: 3.0.6
 
 dev_dependencies:
   flutter_test:
