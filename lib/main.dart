@@ -1,6 +1,6 @@
 import 'package:calendar_frontend/providers/schedule_provider.dart';
 import 'package:calendar_frontend/screens/home_screen.dart';
-import 'package:calendar_frontend/screens/home_screen2.dart';
+import 'package:calendar_frontend/screens/home_screen.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/date_symbol_data_local.dart';
 import 'package:provider/provider.dart';
@@ -21,7 +21,7 @@ class MyApp extends StatelessWidget {
       create: (context) => ScheduleProvider(),
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
-        home: HomeScreen2(),
+        home: HomeScreen(),
       ),
     );
   }

@@ -1,80 +1,97 @@
 import 'package:flutter/material.dart';
+import 'package:calendar_frontend/component/main_calendar.dart';
+import 'package:calendar_frontend/component/schedule_card.dart';
+import 'package:calendar_frontend/component/today_banner.dart';
+import 'package:calendar_frontend/component/schedule_bottom_sheet.dart';
+import 'package:calendar_frontend/consts/colors.dart';
 import 'package:provider/provider.dart';
+import 'package:calendar_frontend/providers/schedule_provider.dart';
+import 'package:calendar_frontend/services/schedule_convert.dart';
 
-import '../inner_screens/add_sche.dart';
-import '../inner_screens/sche_tile.dart';
-import '../models/schedule_model.dart';
-import '../providers/schedule_provider.dart';
-import '../services/schedule_api.dart';
-
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
-
-  @override
-  State<HomeScreen> createState() => _HomeScreenState();
-}
-
-class _HomeScreenState extends State<HomeScreen> {
-  List<ScheduleModel>? schedule;
-
-  getSchedule() async {
-    schedule = await ScheduleAPiServices.getAllSchedule();
-    Provider.of<ScheduleProvider>(context, listen: false).scheduleList =
-        schedule!;
-    setState(() {});
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    getSchedule();
-  }
+class HomeScreen extends StatelessWidget {
+  DateTime selectedDate = DateTime.utc(
+    DateTime.now().year,
+    DateTime.now().month,
+    DateTime.now().day,
+  );
 
   @override
   Widget build(BuildContext context) {
-    return schedule == null
-        ? const Scaffold(
-            body: Center(
-              child: CircularProgressIndicator(),
+    final provider = context.watch<ScheduleProvider>();
+    final selectedDate = provider.selectedDate;
+    final schedules = provider.cache[selectedDate] ?? [];
+
+    return Scaffold(
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: PRIMARY_COLOR,
+        onPressed: () {
+          showModalBottomSheet(
+            context: context,
+            isDismissible: true,
+            isScrollControlled: true,
+            builder: (_) => ScheduleBottomSheet(
+              selectedDate: selectedDate,
             ),
-          )
-        : Scaffold(
-            appBar: AppBar(
-              title: Text(
-                'Schedule list (${Provider.of<ScheduleProvider>(context).scheduleList.length})',
-              ),
-              centerTitle: true,
-              backgroundColor: Colors.blue[300],
+          );
+        },
+        child: Icon(
+          Icons.add,
+        ),
+      ),
+      body: SafeArea(
+        child: Column(
+          children: [
+            MainCalendar(
+              selectedDate: selectedDate,
+              onDaySelected: (selectedDate, focusedDate) =>
+                  onDaySelected(selectedDate, focusedDate, context),
             ),
-            body: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-              child: Consumer<ScheduleProvider>(
-                builder: (context, ScheduleProvider, child) {
-                  return ListView.builder(
-                      itemCount: ScheduleProvider.scheduleList.length,
-                      itemBuilder: (context, index) {
-                        ScheduleModel scheduleModel =
-                            ScheduleProvider.scheduleList[index];
-                        return ScheTile(
-                          scheduleModel: scheduleModel,
-                          scheduleProvider: ScheduleProvider,
-                        );
-                      });
+            SizedBox(height: 8.0),
+            TodayBanner(
+              selectedDate: selectedDate,
+              count: schedules.length,
+            ),
+            SizedBox(height: 8.0),
+            Expanded(
+              child: ListView.builder(
+                itemCount: schedules.length,
+                itemBuilder: (context, index) {
+                  final schedule = schedules[index];
+                  return Dismissible(
+                    key: UniqueKey(),
+                    direction: DismissDirection.startToEnd,
+                    onDismissed: (DismissDirection direction) {
+                      provider.deleteSchedule(scheNo: schedule.scheNo);
+                    },
+                    child: Padding(
+                      padding: const EdgeInsets.only(
+                          bottom: 8.0, left: 8.0, right: 8.0),
+                      child: ScheduleCard(
+                        startTime:
+                            apiConvertClass.apiConvert(schedule.startDate),
+                        endTime: apiConvertClass.apiConvert(schedule.endDate),
+                        content: schedule.name,
+                      ),
+                    ),
+                  );
                 },
               ),
             ),
-            floatingActionButton: FloatingActionButton(
-              backgroundColor: Colors.green,
-              child: const Icon(
-                Icons.add,
-              ),
-              onPressed: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => AddSche()),
-                );
-              },
-            ),
-          );
+          ],
+        ),
+      ),
+    );
+  }
+
+  void onDaySelected(
+    DateTime selectedDate,
+    DateTime focusedDate,
+    BuildContext context,
+  ) {
+    final provider = context.read<ScheduleProvider>();
+    provider.changeSelectedDate(
+      date: selectedDate,
+    );
+    provider.getSchedules(date: selectedDate);
   }
 }

@@ -85,4 +85,25 @@ class ScheduleAPiServices {
       throw error.toString();
     }
   }
+
+  static Future<http.Response> deleteSchedule({
+    required int scheNo,
+  }) async {
+    Map<String, String> qParams = {
+      'scheNo': '${scheNo}',
+    };
+    print(qParams);
+    try {
+      var url = Uri.parse(BASEURL);
+      final finalUri = url.replace(queryParameters: qParams);
+      http.Response response = await http.delete(
+        finalUri,
+        headers: headers,
+      );
+      print(response.body);
+      return response;
+    } catch (error) {
+      throw error.toString();
+    }
+  }
 }

@@ -36,6 +36,13 @@ class ScheduleProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void deleteSchedule({
+    required int scheNo,
+  }) async {
+    ScheduleAPiServices.deleteSchedule(scheNo: scheNo);
+    notifyListeners();
+  }
+
   void changeSelectedDate({
     required DateTime date,
   }) {
