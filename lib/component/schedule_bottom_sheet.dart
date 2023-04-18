@@ -27,6 +27,7 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
   @override
   Widget build(BuildContext context) {
     final bottomInset = MediaQuery.of(context).viewInsets.bottom;
+    final provider = Provider.of<ScheduleProvider>(context, listen: false);
 
     return Form(
       key: formKey,
@@ -78,7 +79,10 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
                 SizedBox(
                   width: double.infinity,
                   child: ElevatedButton(
-                    onPressed: () => onSavePressed(context),
+                    onPressed: () {
+                      onSavePressed(context);
+                      provider.getSchedules(date: widget.selectedDate);
+                    },
                     style: ElevatedButton.styleFrom(
                       primary: PRIMARY_COLOR,
                     ),
@@ -103,7 +107,7 @@ class _ScheduleBottomSheetState extends State<ScheduleBottomSheet> {
             startTime: startTime!,
             endTime: endTime!,
           );
-
+      context.read<ScheduleProvider>().getSchedules(date: widget.selectedDate);
       Navigator.of(context).pop();
     }
   }

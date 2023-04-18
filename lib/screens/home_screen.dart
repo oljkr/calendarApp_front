@@ -57,20 +57,23 @@ class HomeScreen extends StatelessWidget {
                 itemCount: schedules.length,
                 itemBuilder: (context, index) {
                   final schedule = schedules[index];
-                  return Dismissible(
-                    key: UniqueKey(),
-                    direction: DismissDirection.startToEnd,
-                    onDismissed: (DismissDirection direction) {
-                      provider.deleteSchedule(scheNo: schedule.scheNo);
-                    },
-                    child: Padding(
-                      padding: const EdgeInsets.only(
-                          bottom: 8.0, left: 8.0, right: 8.0),
-                      child: ScheduleCard(
-                        startTime:
-                            apiConvertClass.apiConvert(schedule.startDate),
-                        endTime: apiConvertClass.apiConvert(schedule.endDate),
-                        content: schedule.name,
+                  return Consumer<ScheduleProvider>(
+                    builder: (context, _, child) => Dismissible(
+                      key: UniqueKey(),
+                      direction: DismissDirection.startToEnd,
+                      onDismissed: (DismissDirection direction) {
+                        provider.deleteSchedule(scheNo: schedule.scheNo);
+                        provider.getSchedules(date: selectedDate);
+                      },
+                      child: Padding(
+                        padding: const EdgeInsets.only(
+                            bottom: 8.0, left: 8.0, right: 8.0),
+                        child: ScheduleCard(
+                          startTime:
+                              apiConvertClass.apiConvert(schedule.startDate),
+                          endTime: apiConvertClass.apiConvert(schedule.endDate),
+                          content: schedule.name,
+                        ),
                       ),
                     ),
                   );
