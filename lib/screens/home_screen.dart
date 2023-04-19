@@ -68,7 +68,9 @@ class HomeScreen extends StatelessWidget {
                       background: dissmissibleContainer.buildBackgroundWidget,
                       direction: DismissDirection.startToEnd,
                       onDismissed: (DismissDirection direction) {
-                        provider.deleteSchedule(scheNo: schedule.scheNo);
+                        provider.deleteSchedule(
+                            selectedDate: selectedDate,
+                            scheNo: schedule.scheNo);
                         provider.getSchedules(date: selectedDate);
                       },
                       child: GestureDetector(
