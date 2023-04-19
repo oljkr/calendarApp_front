@@ -1,12 +1,14 @@
 import 'package:flutter/cupertino.dart';
 
 class ScheduleModel with ChangeNotifier {
+  String? id;
   final int scheNo;
   String name, startDate, endDate;
   String? place;
   String? memo;
 
   ScheduleModel({
+    this.id,
     required this.scheNo,
     required this.name,
     required this.startDate,
@@ -55,12 +57,14 @@ class ScheduleModel with ChangeNotifier {
   }
 
   ScheduleModel copyWith({
+    String? id,
     int? scheNo,
     String? name,
     String? startDate,
     String? endDate,
   }) =>
       ScheduleModel(
+        id: id ?? this.id,
         scheNo: scheNo ?? this.scheNo,
         name: name ?? this.name,
         startDate: startDate ?? this.startDate,

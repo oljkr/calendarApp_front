@@ -37,11 +37,44 @@ class ScheduleProvider with ChangeNotifier {
 
   void createSchedule({
     String? name,
-    DateTime? startDate,
+    required DateTime startDate,
     int? startTime,
     int? endTime,
   }) async {
-    ScheduleAPiServices.createSchedule(name, startDate, startTime, endTime);
+    final targetDate = startDate;
+    final uuid = Uuid();
+
+    final tempId = uuid.v4();
+    final newSchedule = scheduleModel.copyWith(
+      id: tempId,
+      name: name,
+    );
+
+    cache.update(
+      targetDate,
+      (value) => [newSchedule],
+      ifAbsent: () => [newSchedule],
+    );
+
+    notifyListeners();
+
+    try {
+      await ScheduleAPiServices.createSchedule(
+          name, startDate, startTime, endTime);
+
+      scheduleList = await ScheduleAPiServices.getSchedule(date: targetDate);
+      cache.update(
+        targetDate,
+        (value) => scheduleList,
+        ifAbsent: () => scheduleList,
+      );
+    } catch (e) {
+      cache.update(
+        targetDate,
+        (value) => value.where((e) => e.id != tempId).toList(),
+      );
+    }
+
     notifyListeners();
   }
 

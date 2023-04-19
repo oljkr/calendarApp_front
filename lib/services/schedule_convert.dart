@@ -1,6 +1,9 @@
 class apiConvertClass {
   static int apiConvert(String text) {
-    int convertTime;
+    int convertTime = 0;
+    if (text.length == 0) {
+      return convertTime;
+    }
     String temp = text.substring(11, 13);
     convertTime = int.parse(temp);
     return convertTime;
