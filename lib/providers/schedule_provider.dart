@@ -143,6 +143,7 @@ class ScheduleProvider with ChangeNotifier {
     required DateTime date,
   }) {
     selectedDate = date;
+
     notifyListeners();
   }
 }
