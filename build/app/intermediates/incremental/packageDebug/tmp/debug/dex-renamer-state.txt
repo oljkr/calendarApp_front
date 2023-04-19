@@ -1,4 +1,4 @@
-#Wed Apr 19 03:57:05 KST 2023
+#Wed Apr 19 14:17:51 KST 2023
 base.0=C\:\\workspace\\calendar_frontend\\build\\app\\intermediates\\dex\\debug\\mergeDexDebug\\classes.dex
 renamed.0=classes.dex
 path.0=classes.dex

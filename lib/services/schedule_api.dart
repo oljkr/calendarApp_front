@@ -61,6 +61,33 @@ class ScheduleAPiServices {
     }
   }
 
+  static Future<ScheduleModel> getDetailSchedule({
+    required int scheNo,
+  }) async {
+    Map<String, String> qParams = {
+      'scheNo': '${scheNo}',
+    };
+    print(qParams);
+    try {
+      var url = Uri.parse(BASEURL);
+      final finalUri = url.replace(queryParameters: qParams);
+      http.Response response = await http.get(
+        finalUri,
+        headers: headers,
+      );
+      print('getDetailSchedule');
+      print(response.body);
+      // log('Response status: ${response.statusCode}');
+      // log('Response body: ${response.body}');
+      Map responseMap = jsonDecode(utf8.decode(response.bodyBytes));
+      print(responseMap);
+      ScheduleModel scheduleModel = ScheduleModel.fromMap(responseMap);
+      return scheduleModel;
+    } catch (error) {
+      throw error.toString();
+    }
+  }
+
   static Future<http.Response> createSchedule(
     String? name,
     DateTime? startDate,
@@ -73,6 +100,33 @@ class ScheduleAPiServices {
         url,
         headers: headers,
         body: jsonEncode(<String, String>{
+          'name': '${name}',
+          'startDate': '${startDate}',
+          'startTime': '${startTime}',
+          'endTime': '${endTime}',
+        }),
+      );
+      print(response.body);
+      return response;
+    } catch (error) {
+      throw error.toString();
+    }
+  }
+
+  static Future<http.Response> updateSchedule(
+    int? scheNo,
+    String? name,
+    DateTime? startDate,
+    int? startTime,
+    int? endTime,
+  ) async {
+    try {
+      var url = Uri.parse(BASEURL);
+      http.Response response = await http.put(
+        url,
+        headers: headers,
+        body: jsonEncode(<String, String>{
+          'scheNo': '${scheNo}',
           'name': '${name}',
           'startDate': '${startDate}',
           'startTime': '${startTime}',
@@ -101,6 +155,7 @@ class ScheduleAPiServices {
         headers: headers,
       );
       print(response.body);
+      print('delete');
       return response;
     } catch (error) {
       throw error.toString();

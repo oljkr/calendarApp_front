@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 
 class ScheduleProvider with ChangeNotifier {
+  ScheduleModel scheduleModel =
+      ScheduleModel(scheNo: 0, name: "", startDate: "", endDate: "");
   List<ScheduleModel> scheduleList = [];
 
   List<ScheduleModel> get getScheduleList {
@@ -26,6 +28,13 @@ class ScheduleProvider with ChangeNotifier {
     notifyListeners();
   }
 
+  void getDetailSchedules({
+    required int scheNo,
+  }) async {
+    scheduleModel = await ScheduleAPiServices.getDetailSchedule(scheNo: scheNo);
+    notifyListeners();
+  }
+
   void createSchedule({
     String? name,
     DateTime? startDate,
@@ -33,6 +42,18 @@ class ScheduleProvider with ChangeNotifier {
     int? endTime,
   }) async {
     ScheduleAPiServices.createSchedule(name, startDate, startTime, endTime);
+    notifyListeners();
+  }
+
+  void updateSchedule({
+    int? scheNo,
+    String? name,
+    DateTime? startDate,
+    int? startTime,
+    int? endTime,
+  }) async {
+    ScheduleAPiServices.updateSchedule(
+        scheNo, name, startDate, startTime, endTime);
     notifyListeners();
   }
 

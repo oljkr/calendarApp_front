@@ -6,4 +6,17 @@ class apiConvertClass {
     print(convertTime);
     return convertTime;
   }
+
+  static int apiConvertUpdate(String text) {
+    int convertTime;
+    String temp = "";
+    if (text.substring(11, 11) == '0') {
+      temp = text.substring(12, 13);
+    } else {
+      temp = text.substring(11, 13);
+    }
+    convertTime = int.parse(temp);
+    print(convertTime);
+    return convertTime;
+  }
 }
